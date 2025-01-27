@@ -14,6 +14,8 @@ class Generator(nn.Module):
             nn.ReLU(),
             nn.ConvTranspose2d(64, 32, kernel_size=4, stride=2, padding=1),
             nn.ReLU(),
+            nn.Conv2d(32, 32, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
             nn.Conv2d(32, 1, kernel_size=3, stride=1, padding=1),
             nn.Sigmoid(),
         )

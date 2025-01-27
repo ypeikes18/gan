@@ -14,7 +14,7 @@ if __name__ == "__main__":
     x = next(iter(data))
     G = Generator()
     D = Discriminator()
-    train(G, D, data, epochs=20, batch_size=64, lr=0.0002, k=1, batches=200)
+    train(G, D, data, epochs=20, batch_size=64, lr=0.0002, k=1)
     generated_sample = G.sample()
     plt.imshow(generated_sample[0].squeeze().detach().numpy(), cmap='gray')
     plt.savefig("images/gan_sample.png")

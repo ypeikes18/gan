@@ -7,8 +7,7 @@ if __name__ == "__main__":
     # The following line of code normalizes the data to the range [0, 1]
     data = torchvision.datasets.MNIST(
         root="mnist/", train=True, download=True, transform=torchvision.transforms.Compose([
-            torchvision.transforms.ToTensor(),
-            torchvision.transforms.Normalize((0.5,), (0.5,))
+            torchvision.transforms.ToTensor()        
         ])
     )
     x = next(iter(data))

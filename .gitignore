@@ -4,3 +4,4 @@ mnist/
 images/
 weights/
 runs/
+gan_playground.py

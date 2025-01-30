@@ -41,14 +41,13 @@ class Generator(nn.Module):
         with t.no_grad():
             return self.model(t.randn(batch_size, self.latent_dim))
 
-# TODO make this for n dimensions
 class Discriminator(nn.Module):
     def __init__(self, *, input_shape: tuple[int, ...], conv_dims: int):
         super().__init__()
         self.model = nn.Sequential(
-            nn.Conv2d(1, 32, 3, 1, 1),
+            create_nd_conv(conv_dims, in_channels=input_shape[0], out_channels=32, kernel_size=3, stride=1, padding=1),
             nn.LeakyReLU(0.2),
-            nn.Conv2d(32, 1, 3, 1, 1),  
+            create_nd_conv(conv_dims, in_channels=32, out_channels=1, kernel_size=3, stride=1, padding=1),
             nn.LeakyReLU(0.2),
             nn.Flatten(),
             nn.Linear(28*28, 1),
@@ -84,7 +83,7 @@ def train(G, D, data, epochs=1, batch_size=32, lr=1e-3, k=1, batches=float('inf'
     data = DataLoader(data, batch_size=batch_size, shuffle=True)
     generator_optimizer = t.optim.Adam(G.parameters(), lr=lr, betas=(0.5, 0.999))
     discriminator_optimizer = t.optim.Adam(D.parameters(), lr=lr, betas=(0.5, 0.999))
-    labels = t.concat([t.ones(batch_size,1), t.zeros(batch_size,1)], dim=0)
+    labels = t.concat([t.ones(batch_size,1) , t.zeros(batch_size,1) * 0.1], dim=0)
     for epoch in range(epochs):
         for i ,(batch, classes) in enumerate(data):
             if i >= batches:

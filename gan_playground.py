@@ -1,7 +1,7 @@
 import torch as t
 import matplotlib.pyplot as plt
 from gan import Generator, Discriminator, train
-from guidance import discriminator_guidance
+from discriminator_guidance import discriminator_guidance
 import torchvision
 
 if __name__ == "__main__":
@@ -13,27 +13,22 @@ if __name__ == "__main__":
         ])
     )
     x = next(iter(data))
-    G = Generator(latent_dim=250, conv_dims=2, output_shape=(1, 28, 28))
+    G = Generator(latent_size=100, output_shape=(1, 28, 28), conv_dims=2)
     D = Discriminator(conv_dims=2, input_shape=(1, 28, 28))
 
+    train(G, D, data, epochs=1, batch_size=64, lr=5e-4, k_discriminator=1, k_generator=1)
 
-    i = 6
-    G.load_state_dict(t.load(f"weights/generator_weights_{i}.pth"))
-    D.load_state_dict(t.load(f"weights/discriminator_weights_{i}.pth"))
-
-    # train(G, D, data, epochs=1, batch_size=64, lr=4e-4, k=1)
-
-    # t.save(G.state_dict(), f"weights/generator_weights_{i+1}.pth")
-    # t.save(D.state_dict(), f"weights/discriminator_weights_{i+1}.pth")
+    t.save(G.state_dict(), f"weights/generator_weights_020325.pth")
+    t.save(D.state_dict(), f"weights/discriminator_weights_020325.pth")
     
     generated_sample = G.sample(10)
-    generated_sample = discriminator_guidance(D, generated_sample, num_steps=50)
+    generated_sample = discriminator_guidance(D, generated_sample, num_steps=0)
     num_samples = 10
     fig, axes = plt.subplots(1, num_samples, figsize=(15, 3))
     for i in range(10):
         axes[i].imshow(generated_sample[i].squeeze().detach().numpy(), cmap='gray')
         axes[i].axis('off')
-    plt.savefig(f"images/gan_sample_{6}_guided{50}.png")
+    plt.savefig(f"images/gan_sample_020325_guided{0}.png")
 
     print("Done")
 
